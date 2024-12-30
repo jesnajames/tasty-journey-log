@@ -1,12 +1,23 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { RestaurantReviews } from "@/components/RestaurantReviews";
+import { Wishlist } from "@/components/Wishlist";
 
 const Index = () => {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="text-center">
-        <h1 className="text-4xl font-bold mb-4">Welcome to Your Blank App</h1>
-        <p className="text-xl text-gray-600">Start building your amazing project here!</p>
-      </div>
+    <div className="container mx-auto px-4 py-8">
+      <h1 className="text-4xl font-bold mb-8">My Food Journey</h1>
+      <Tabs defaultValue="reviews" className="w-full">
+        <TabsList className="grid w-full grid-cols-2">
+          <TabsTrigger value="reviews">My Reviews</TabsTrigger>
+          <TabsTrigger value="wishlist">Wishlist</TabsTrigger>
+        </TabsList>
+        <TabsContent value="reviews">
+          <RestaurantReviews />
+        </TabsContent>
+        <TabsContent value="wishlist">
+          <Wishlist />
+        </TabsContent>
+      </Tabs>
     </div>
   );
 };
