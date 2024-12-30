@@ -54,11 +54,11 @@
     --popover: 200 50% 20%;
     --popover-foreground: 0 0% 98%;
 
-    --primary: 0 0% 98%;
+    --primary: 340 82% 76%;
     --primary-foreground: 200 50% 20%;
 
-    --secondary: 340 82% 76%;
-    --secondary-foreground: 200 50% 20%;
+    --secondary: 0 84% 60%;
+    --secondary-foreground: 0 0% 98%;
 
     --muted: 200 40% 25%;
     --muted-foreground: 200 20% 80%;
@@ -71,7 +71,7 @@
 
     --border: 200 40% 25%;
     --input: 200 40% 25%;
-    --ring: 200 20% 80%;
+    --ring: 340 82% 76%;
 
     --sidebar-background: 200 50% 20%;
     --sidebar-foreground: 0 0% 98%;
