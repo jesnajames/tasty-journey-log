@@ -18,7 +18,7 @@ const Index = () => {
     <div className="container mx-auto px-4 py-8">
       <div className="relative mb-8">
         <img
-          src="https://images.unsplash.com/photo-1649972904349-6e44c42644a7"
+          src="https://www.istockphoto.com/photo/two-glasses-of-red-wine-and-assorted-gourmet-cheeses-fruit-and-meats-gm1129168550-298188782"
           alt="Banner"
           className="w-full h-48 object-cover rounded-lg mb-4"
         />
