@@ -11,8 +11,8 @@ interface ReviewFormProps {
 }
 
 export const ReviewForm = ({ onSubmit, onCancel }: ReviewFormProps) => {
-  const [restaurantName, setRestaurantName] = useState("");
-  const [dateVisited, setDateVisited] = useState("");
+  const [restaurant_name, setRestaurantName] = useState("");
+  const [date_visited, setDateVisited] = useState("");
   const [dishes, setDishes] = useState("");
   const [rating, setRating] = useState("5");
   const [notes, setNotes] = useState("");
@@ -20,8 +20,8 @@ export const ReviewForm = ({ onSubmit, onCancel }: ReviewFormProps) => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     onSubmit({
-      restaurantName,
-      dateVisited,
+      restaurant_name,
+      date_visited,
       dishes: dishes.split(",").map((dish) => dish.trim()),
       rating: Number(rating),
       notes,
@@ -31,20 +31,20 @@ export const ReviewForm = ({ onSubmit, onCancel }: ReviewFormProps) => {
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <div>
-        <Label htmlFor="restaurantName">Restaurant Name</Label>
+        <Label htmlFor="restaurant_name">Restaurant Name</Label>
         <Input
-          id="restaurantName"
-          value={restaurantName}
+          id="restaurant_name"
+          value={restaurant_name}
           onChange={(e) => setRestaurantName(e.target.value)}
           required
         />
       </div>
       <div>
-        <Label htmlFor="dateVisited">Date Visited</Label>
+        <Label htmlFor="date_visited">Date Visited</Label>
         <Input
-          id="dateVisited"
+          id="date_visited"
           type="date"
-          value={dateVisited}
+          value={date_visited}
           onChange={(e) => setDateVisited(e.target.value)}
           required
         />

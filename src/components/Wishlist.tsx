@@ -12,7 +12,7 @@ import { useToast } from "@/components/ui/use-toast";
 
 type WishlistItem = {
   id: string;
-  restaurantName: string;
+  restaurant_name: string;
   cuisine: string;
   notes: string;
 };
@@ -20,7 +20,7 @@ type WishlistItem = {
 export const Wishlist = () => {
   const [showForm, setShowForm] = useState(false);
   const [newItem, setNewItem] = useState({
-    restaurantName: "",
+    restaurant_name: "",
     cuisine: "",
     notes: "",
   });
@@ -51,7 +51,7 @@ export const Wishlist = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["wishlist"] });
-      setNewItem({ restaurantName: "", cuisine: "", notes: "" });
+      setNewItem({ restaurant_name: "", cuisine: "", notes: "" });
       setShowForm(false);
       toast({
         title: "Success",
@@ -117,12 +117,12 @@ export const Wishlist = () => {
         {showForm ? (
           <form onSubmit={handleSubmit} className="space-y-4 mb-6">
             <div>
-              <Label htmlFor="restaurantName">Restaurant Name</Label>
+              <Label htmlFor="restaurant_name">Restaurant Name</Label>
               <Input
-                id="restaurantName"
-                value={newItem.restaurantName}
+                id="restaurant_name"
+                value={newItem.restaurant_name}
                 onChange={(e) =>
-                  setNewItem({ ...newItem, restaurantName: e.target.value })
+                  setNewItem({ ...newItem, restaurant_name: e.target.value })
                 }
                 required
               />
@@ -175,7 +175,7 @@ export const Wishlist = () => {
                   >
                     <X className="h-4 w-4" />
                   </Button>
-                  <CardTitle className="text-lg">{item.restaurantName}</CardTitle>
+                  <CardTitle className="text-lg">{item.restaurant_name}</CardTitle>
                   <p className="text-sm text-muted-foreground">{item.cuisine}</p>
                 </CardHeader>
                 <CardContent>

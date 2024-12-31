@@ -11,13 +11,13 @@ export const ReviewCard = ({ review }: ReviewCardProps) => {
     <Card>
       <CardHeader>
         <CardTitle className="flex items-center justify-between">
-          {review.restaurantName}
+          {review.restaurant_name}
           <Badge variant="secondary">{review.rating}/5</Badge>
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-2">
         <p className="text-sm text-muted-foreground">
-          Visited on {new Date(review.dateVisited).toLocaleDateString()}
+          Visited on {new Date(review.date_visited).toLocaleDateString()}
         </p>
         <div>
           <h4 className="font-semibold mb-1">Dishes tried:</h4>

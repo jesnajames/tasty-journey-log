@@ -11,8 +11,8 @@ import { useToast } from "@/components/ui/use-toast";
 
 export type Review = {
   id: string;
-  restaurantName: string;
-  dateVisited: string;
+  restaurant_name: string;
+  date_visited: string;
   dishes: string[];
   rating: number;
   notes: string;
@@ -40,7 +40,11 @@ export const RestaurantReviews = () => {
   const addReviewMutation = useMutation({
     mutationFn: async (review: Omit<Review, "id">) => {
       const { error } = await supabase.from("restaurant_reviews").insert({
-        ...review,
+        restaurant_name: review.restaurant_name,
+        date_visited: review.date_visited,
+        dishes: review.dishes,
+        rating: review.rating,
+        notes: review.notes,
         user_id: user?.id,
       });
       if (error) throw error;
