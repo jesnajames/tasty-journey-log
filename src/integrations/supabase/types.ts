@@ -30,6 +30,82 @@ export type Database = {
         }
         Relationships: []
       }
+      restaurant_reviews: {
+        Row: {
+          created_at: string
+          date_visited: string
+          dishes: string[]
+          id: string
+          notes: string | null
+          rating: number
+          restaurant_name: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          date_visited: string
+          dishes: string[]
+          id?: string
+          notes?: string | null
+          rating: number
+          restaurant_name: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          date_visited?: string
+          dishes?: string[]
+          id?: string
+          notes?: string | null
+          rating?: number
+          restaurant_name?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "restaurant_reviews_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      wishlist_items: {
+        Row: {
+          created_at: string
+          cuisine: string
+          id: string
+          notes: string | null
+          restaurant_name: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          cuisine: string
+          id?: string
+          notes?: string | null
+          restaurant_name: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          cuisine?: string
+          id?: string
+          notes?: string | null
+          restaurant_name?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "wishlist_items_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never

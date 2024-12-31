@@ -4,6 +4,10 @@ import { Button } from "@/components/ui/button";
 import { PlusCircle } from "lucide-react";
 import { ReviewForm } from "./ReviewForm";
 import { ReviewCard } from "./ReviewCard";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/components/AuthProvider";
+import { useToast } from "@/components/ui/use-toast";
 
 export type Review = {
   id: string;
@@ -15,16 +19,52 @@ export type Review = {
 };
 
 export const RestaurantReviews = () => {
-  const [reviews, setReviews] = useState<Review[]>([]);
   const [showForm, setShowForm] = useState(false);
+  const { user } = useAuth();
+  const { toast } = useToast();
+  const queryClient = useQueryClient();
+
+  const { data: reviews = [], isLoading } = useQuery({
+    queryKey: ["reviews"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("restaurant_reviews")
+        .select("*")
+        .order("created_at", { ascending: false });
+
+      if (error) throw error;
+      return data;
+    },
+  });
+
+  const addReviewMutation = useMutation({
+    mutationFn: async (review: Omit<Review, "id">) => {
+      const { error } = await supabase.from("restaurant_reviews").insert({
+        ...review,
+        user_id: user?.id,
+      });
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["reviews"] });
+      setShowForm(false);
+      toast({
+        title: "Success",
+        description: "Review added successfully!",
+      });
+    },
+    onError: (error) => {
+      toast({
+        title: "Error",
+        description: "Failed to add review. Please try again.",
+        variant: "destructive",
+      });
+      console.error("Error adding review:", error);
+    },
+  });
 
   const handleAddReview = (review: Omit<Review, "id">) => {
-    const newReview = {
-      ...review,
-      id: crypto.randomUUID(),
-    };
-    setReviews([newReview, ...reviews]);
-    setShowForm(false);
+    addReviewMutation.mutate(review);
   };
 
   return (
@@ -41,7 +81,12 @@ export const RestaurantReviews = () => {
         </CardHeader>
         <CardContent>
           {showForm ? (
-            <ReviewForm onSubmit={handleAddReview} onCancel={() => setShowForm(false)} />
+            <ReviewForm
+              onSubmit={handleAddReview}
+              onCancel={() => setShowForm(false)}
+            />
+          ) : isLoading ? (
+            <p className="text-center text-muted-foreground py-8">Loading...</p>
           ) : reviews.length === 0 ? (
             <p className="text-center text-muted-foreground py-8">
               No reviews yet. Start by adding your first restaurant review!

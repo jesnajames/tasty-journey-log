@@ -5,6 +5,10 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { PlusCircle, X } from "lucide-react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/components/AuthProvider";
+import { useToast } from "@/components/ui/use-toast";
 
 type WishlistItem = {
   id: string;
@@ -14,27 +18,88 @@ type WishlistItem = {
 };
 
 export const Wishlist = () => {
-  const [wishlist, setWishlist] = useState<WishlistItem[]>([]);
   const [showForm, setShowForm] = useState(false);
   const [newItem, setNewItem] = useState({
     restaurantName: "",
     cuisine: "",
     notes: "",
   });
+  const { user } = useAuth();
+  const { toast } = useToast();
+  const queryClient = useQueryClient();
+
+  const { data: wishlist = [], isLoading } = useQuery({
+    queryKey: ["wishlist"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("wishlist_items")
+        .select("*")
+        .order("created_at", { ascending: false });
+
+      if (error) throw error;
+      return data;
+    },
+  });
+
+  const addItemMutation = useMutation({
+    mutationFn: async (item: Omit<WishlistItem, "id">) => {
+      const { error } = await supabase.from("wishlist_items").insert({
+        ...item,
+        user_id: user?.id,
+      });
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["wishlist"] });
+      setNewItem({ restaurantName: "", cuisine: "", notes: "" });
+      setShowForm(false);
+      toast({
+        title: "Success",
+        description: "Restaurant added to wishlist!",
+      });
+    },
+    onError: (error) => {
+      toast({
+        title: "Error",
+        description: "Failed to add restaurant. Please try again.",
+        variant: "destructive",
+      });
+      console.error("Error adding wishlist item:", error);
+    },
+  });
+
+  const removeItemMutation = useMutation({
+    mutationFn: async (id: string) => {
+      const { error } = await supabase
+        .from("wishlist_items")
+        .delete()
+        .eq("id", id);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["wishlist"] });
+      toast({
+        title: "Success",
+        description: "Restaurant removed from wishlist!",
+      });
+    },
+    onError: (error) => {
+      toast({
+        title: "Error",
+        description: "Failed to remove restaurant. Please try again.",
+        variant: "destructive",
+      });
+      console.error("Error removing wishlist item:", error);
+    },
+  });
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const item: WishlistItem = {
-      ...newItem,
-      id: crypto.randomUUID(),
-    };
-    setWishlist([item, ...wishlist]);
-    setNewItem({ restaurantName: "", cuisine: "", notes: "" });
-    setShowForm(false);
+    addItemMutation.mutate(newItem);
   };
 
   const handleRemove = (id: string) => {
-    setWishlist(wishlist.filter((item) => item.id !== id));
+    removeItemMutation.mutate(id);
   };
 
   return (
@@ -91,6 +156,8 @@ export const Wishlist = () => {
               <Button type="submit">Add to Wishlist</Button>
             </div>
           </form>
+        ) : isLoading ? (
+          <p className="text-center text-muted-foreground py-8">Loading...</p>
         ) : wishlist.length === 0 ? (
           <p className="text-center text-muted-foreground py-8">
             Your wishlist is empty. Add some restaurants you'd like to try!
