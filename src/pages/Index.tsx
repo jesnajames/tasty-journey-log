@@ -16,12 +16,20 @@ const Index = () => {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <div className="flex justify-between items-center mb-8">
-        <h1 className="text-4xl font-bold">My Food Journey</h1>
-        <Button variant="outline" onClick={handleLogout}>
-          <LogOut className="mr-2 h-4 w-4" />
-          Logout
-        </Button>
+      <div className="relative mb-8">
+        <img
+          src="https://images.unsplash.com/photo-1649972904349-6e44c42644a7"
+          alt="Banner"
+          className="w-full h-48 object-cover rounded-lg mb-4"
+        />
+        <div className="absolute inset-0 bg-black/40 rounded-lg"></div>
+        <div className="absolute inset-0 flex justify-between items-center px-6">
+          <h1 className="text-4xl font-bold text-white">My Food Journey</h1>
+          <Button variant="outline" onClick={handleLogout}>
+            <LogOut className="mr-2 h-4 w-4" />
+            Logout
+          </Button>
+        </div>
       </div>
       <Tabs defaultValue="reviews" className="w-full">
         <TabsList className="grid w-full grid-cols-2">
